@@ -3,11 +3,13 @@ import argparse
 import numpy as np
 import scipy as sp
 import scipy.misc
+import imageio
 
 import imgFormatConvert
 
 def paintMatrix(matrix, path = './temp/defaultPaintPath.jpg'):
-	sp.misc.imsave(name = path, arr = matrix.astype('uint8'))
+	# sp.misc.imsave(name = path, arr = matrix.astype('uint8'))
+	imageio.imwrite(path,matrix.astype('uint8'))
 
 
 def fixMatrixDataOverflow(matrix = None):

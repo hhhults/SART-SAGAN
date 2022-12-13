@@ -22,7 +22,6 @@ import reconstruction
 DRCT_LOAD_SINO = False
 
 if __name__ == '__main__':
-
 	os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 	parser = argparse.ArgumentParser(description = '')

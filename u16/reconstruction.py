@@ -101,7 +101,7 @@ def MNNsart_batch(sinogramImgLoader, outputFolderPath, option = 'default_option'
 				sessConfig.gpu_options.allow_growth = True
 				sessConfig.gpu_options.per_process_gpu_memory_fraction = 1
 				with tf.Session(config = sessConfig) as sess:
-					projectModel = NNmodel.GANmodel(sess = sess, checkpointFolderPath = nnStepCkptPath, G_option = 'simpleGAN_G', D_option = 'simpleGAN_D', lossOption = 'l2_loss')
+					projectModel = NNmodel.DDGANmodel(sess = sess, checkpointFolderPath = nnStepCkptPath, G_option = 'simpleGAN_G', D_option = 'simpleGAN_D', lossOption = 'l2_loss')
 					checkpointStatus = projectModel.loadModel()
 					if checkpointStatus is False:
 						print('ERROR! In reconstruction.MNNsart_batch()')

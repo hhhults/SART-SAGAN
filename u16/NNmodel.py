@@ -49,6 +49,7 @@ def generatorNN(NNinput, isTraining = True, reuse = tf.AUTO_REUSE, nnOption = No
 		return NNstructure.generatorNN_GTest(NNinput = NNinput, isTraining = isTraining, reuse = reuse, name = 'G_testGenerator', device = device)
 	elif nnOption == 'DDGAN_G' or nnOption == 'DDGAN':
 		return NNstructure.generatorNN_DDGAN(NNinput = NNinput, isTraining = isTraining, reuse = reuse, name = 'G_testGenerator', device = device)
+		
 	elif nnOption == '716' or nnOption == '716_G':
 		return NNstructure.generatorNN_716(NNinput = NNinput, isTraining = isTraining, reuse = reuse, name = 'G_716generator', device = device)
 	elif nnOption == '721' or nnOption == '721_G':
@@ -112,11 +113,11 @@ def discriminatorNN(NNinput, isTraining, reuse = tf.AUTO_REUSE, nnOption = None,
 def lossFunc(a = None, b = None, X = None, Y = None, Gx = None, DGx = None, Dy = None, LEx = None, LEy = None, Gy = None, batchSize = 1.0, lossOption = None):
 	if lossOption == 'l2_loss' or lossOption == None:
 		return (1.0 / batchSize) * tf.nn.l2_loss(a - b)
-	# elif lossOption == 'IDGAN_loss_D':
-	# 	# return -tf.reduce_mean(tf.log(Dy) + tf.log(1.-DGx))
+	elif lossOption == 'IDGAN_loss_D':
+		return -tf.reduce_mean(tf.log(Dy) + tf.log(1.-DGx))
 	# 	return tf.nn.l2_loss(Dy - 1.) + tf.nn.l2_loss(DGx - 0.)
-	# elif lossOption == 'IDGAN_loss_G':
-	# 	return 0.5 * -tf.reduce_mean(tf.log(DGx)) + 1.0 * NNstructure_IDGAN.get_pixel_loss(Y, Gx) + 1.0 * NNstructure_IDGAN.get_smooth_loss(Gx)
+	elif lossOption == 'IDGAN_loss_G':
+		return 0.5 * -tf.reduce_mean(tf.log(DGx)) + 1.0 * NNstructure_IDGAN.get_pixel_loss(Y, Gx) + 1.0 * NNstructure_IDGAN.get_smooth_loss(Gx)
 	# elif lossOption == 'DDGAN_loss_G':
 	# 	return 1.0 * NNstructure_IDGAN.get_pixel_loss(Y, Gx) + 1.0 * NNstructure_IDGAN.get_smooth_loss(Gx)
 	# elif lossOption == 'DDGAN_loss_P':
@@ -178,6 +179,8 @@ class NNmodel(metaclass = abc.ABCMeta):
 		self.verbose = verbose
 		self.avaliableGPUlist = [ x.name.replace('device:', '').lower() for x in device_lib.list_local_devices() if 'GPU' in x.name ]
 		
+		
+
 		if repeatGPUlist is True:
 			self.avaliableGPUlist = self.avaliableGPUlist + self.avaliableGPUlist + self.avaliableGPUlist + self.avaliableGPUlist
 		if self.verbose: print('Info: In NNmodel.NNmodel.__init__()')
@@ -465,8 +468,20 @@ class DDGANmodel(NNmodel):
 		self.isTraining = tf.placeholder(tf.bool, name = 'is_training')
 		self.learningRate = tf.placeholder(tf.float32, name = 'learning_rate')
 		# build model -- build NN
-		self.Gx, self.E0x, self.E1x, self.E2x, self.E3x = generatorNN(NNinput = self.X, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = False, device = self.avaliableGPUlist[:])
-		self.Gy, self.E0y, self.E1y, self.E2y, self.E3y = generatorNN(NNinput = self.Y, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = True, device = self.avaliableGPUlist[:])
+		nx = generatorNN(NNinput = self.X, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = False, device = self.avaliableGPUlist[:])
+		self.Gx = nx[0]
+		self.E0x = nx[1]
+		self.E1x = nx[2]
+		self.E2x = nx[3]
+		self.E3x = nx[4]
+		ny = generatorNN(NNinput = self.Y, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = True, device = self.avaliableGPUlist[:])
+		self.Gy = ny[0]
+		self.E0y = ny[1]
+		self.E1y = ny[2]
+		self.E2y = ny[3]
+		self.E3y = ny[4]
+		# self.Gx, self.E0x, self.E1x, self.E2x, self.E3x = generatorNN(NNinput = self.X, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = False, device = self.avaliableGPUlist[:])
+		# self.Gy, self.E0y, self.E1y, self.E2y, self.E3y = generatorNN(NNinput = self.Y, nnOption = G_option, name = 'G_block', isTraining = self.isTraining, reuse = True, device = self.avaliableGPUlist[:])
 		self.Dy = discriminatorNN(NNinput = self.Y, nnOption = D_option, name = 'D_block', isTraining = self.isTraining, reuse = False, device = self.avaliableGPUlist[0])
 		self.DGx = discriminatorNN(NNinput = self.Gx, nnOption = D_option, name = 'D_block', isTraining = self.isTraining, reuse = True, device = self.avaliableGPUlist[0])
 		self.LE2x = discriminatorNN(NNinput = self.E2x, nnOption = L_option, name = 'L_block', isTraining = self.isTraining, reuse = False, device = self.avaliableGPUlist[0])

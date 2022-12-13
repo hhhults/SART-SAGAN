@@ -70,6 +70,7 @@ def createTrainsetPair(cleanImgLoader, noisyImgLoaderList):
 
 	shuffleIndexList = list(range(len(cleanImgFilePathList)))
 	random.shuffle(shuffleIndexList)
+	print(noisyImgLoaderList)
 	cleanImgLoader = dataLoader.PngLoader() if cleanImgLoader.loaderType == 'png' else dataLoader.FltLoader()
 	cleanImgLoader.filePathList = [ cleanImgFilePathList[shuffleIndex] for shuffleIndex in shuffleIndexList ]
 	noisyImgLoader = dataLoader.PngLoader() if noisyImgLoaderList[0].loaderType == 'png' else dataLoader.FltLoader()

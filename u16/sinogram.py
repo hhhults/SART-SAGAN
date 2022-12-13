@@ -2,6 +2,7 @@
 import argparse
 import astra
 import numpy as np
+import os
 
 import dataLoader
 import debug
@@ -11,7 +12,9 @@ import parameters
 
 
 def createSinogram_batch(imgLoader, sinogramFolderPath, option = 'default_option', **paraDict):
-
+	if not os.path.exists(sinogramFolderPath):
+		os.mkdir(sinogramFolderPath)
+		
 	parameters.sinogramCreationParameterInitialization(option = option)
 	
 	numpix = parameters.sino_numpix #512

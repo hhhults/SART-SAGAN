@@ -92,9 +92,9 @@ def trainsetAugmentation(oriImgFolderPath, outputFolderPath, dataType = 'png'):
 
 
 def dataAugmentation(inputImgLoader, outputFolderPath = '../temp', outputDataType = 'png'):
-
+	if not os.path.exists(outputFolderPath):
+		os.mkdir(outputFolderPath)
 	imgList = []
-
 	for oriImg, oriImgPureName in inputImgLoader:
 		print('Info: Data Augmentation - %s' % str(oriImgPureName))
 		mat = imgFormatConvert.reshapeImgToMatrix(oriImg)
