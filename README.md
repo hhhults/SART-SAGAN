@@ -7,28 +7,28 @@ Readme
 This project is from Ruiwen Xing’s master thesis: Deep Learning Based CT Image Reconstruction.
  
 The project contains following code file:
-Main.py                                    the start point
-Sinogram.py                            create sinogram from tomography image
-Reconstruction.py                    reconstruction process by SART algorithm
-imgPainter.py                          output image file
-imgFormatConvert.py              adjust shape of image tensor
-imgEvaluation.py                     calculate PSNR & SSIM value between two image
-NNmodel.py                            create different neural net model
-NNstructure.py                        inner structures of neural networks
-NNstructure_xxxx.py                 inner structures of other neural networks
-Parameters.py                          handle hyper parameters
-SAGAN_ops.py                        support block from original SAGAN
-SAGAN_util.py                         support block from original SAGAN
-Debug.py                                 some functions useful in debug process
-createTrainset.py                      to generate noisy or incomplete CT images from clean, high dose CT images
-dataLoader.py                          load data
-imgTrainset.py                         create paired image trainset
+Main.py--------------------------the start point\
+Sinogram.py----------------------create sinogram from tomography image\
+Reconstruction.py----------------reconstruction process by SART algorithm\
+imgPainter.py--------------------output image file\
+imgFormatConvert.py--------------adjust shape of image tensor\
+imgEvaluation.py-----------------calculate PSNR & SSIM value between two image\
+NNmodel.py-----------------------create different neural net model\
+NNstructure.py-------------------inner structures of neural networks\
+NNstructure_xxxx.py--------------inner structures of other neural networks\
+Parameters.py--------------------handle hyper parameters\
+SAGAN_ops.py---------------------support block from original SAGAN\
+SAGAN_util.py--------------------support block from original SAGAN\
+Debug.py-------------------------some functions useful in debug process\
+createTrainset.py----------------to generate noisy or incomplete CT images from clean, high dose CT images\
+dataLoader.py--------------------load data\
+imgTrainset.py-------------------create paired image trainset
 
 
 
 Prepare Dataset
 =
-In this project we use CT images from cancer image archive.
+In this project we use CT images from the cancer image archive.
 CT images are created under standard dose scan.
 However, this project needs paired image dataset
 So, we use ASTRA toolbox to simulate different CT scan and generate low-dose, sparse view, and limited angle sinogram (original scan data)
